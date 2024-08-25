@@ -47,8 +47,7 @@ func NewStorage(storagePath string, log *slog.Logger) (*Storage, error) {
 func (s *Storage) SaveUrl(urlToSave string, alias string) (int64, error) {
 	const op = "storage.sqlite.SaveUrl"
 
-	_stmt := `INSERT INTO urls(url, alias)
-			  VALUES(?, ?)`
+	_stmt := `INSERT INTO urls(url, alias) VALUES(?, ?)`
 
 	stmt, err := s.db.Prepare(_stmt)
 	if err != nil {
@@ -76,9 +75,7 @@ func (s *Storage) GetUrl(urlToGet string) (string, error) {
 	const op = "storage.sqlite.GetUrl"
 
 	// select statement
-	stmt := `SELECT url 
-			 FROM urls 
-			 WHERE alias=?`
+	stmt := `SELECT url FROM urls WHERE alias=?`
 
 	// founded row or no rows
 	row := s.db.QueryRow(stmt, urlToGet)
@@ -99,8 +96,7 @@ func (s *Storage) GetUrl(urlToGet string) (string, error) {
 func (s *Storage) DeleteUrl(urlToDelete string) (bool, error) {
 	const op = "storage.sqlite.DeleteUrl"
 
-	_stmt := `DELETE FROM urls
-			  WHERE alias = ?`
+	_stmt := `DELETE FROM urls WHERE alias = ?`
 
 	stmt, err := s.db.Prepare(_stmt)
 	if err != nil {
