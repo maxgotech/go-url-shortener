@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"url-shortener/internal/config"
+	"url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
 
@@ -52,6 +53,8 @@ func main() {
 	router.Use(middleware.RequestID)
 	// ip of user for req
 	router.Use(middleware.RealIP)
+	// logger for req
+	router.Use(logger.New(log))
 
 	_ = router
 	// TODO: run server:
