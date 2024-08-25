@@ -8,6 +8,8 @@ import (
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 )
 
@@ -17,24 +19,25 @@ const (
 	envProd  = "prod"
 )
 
-func init() {
-	// loads values from .env into the system
+func main() {
+	// load .env file
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found")
+		os.Exit(1)
 	}
-}
 
-func main() {
+	// load config
 	cfg := config.MustLoad()
 
+	// create logger
 	log := setupLogger((cfg.Env))
 
 	log.Info(("starting url-shortener"), slog.String("env", cfg.Env))
 
-
 	log.Debug("debug messages enabled")
 
-	storage, err := pq.NewStorage(cfg.StoragePath, log)
+	// create storage
+	storage, err := sqlite.NewStorage(cfg.StoragePath, log)
 	if err != nil {
 		log.Error("failed to init storage", sl.Err(err))
 		os.Exit(1)
@@ -42,8 +45,15 @@ func main() {
 
 	_ = storage
 
-	// TODO: init router: chi, "chi render"
+	// create router
+	router := chi.NewRouter()
 
+	// id for each req
+	router.Use(middleware.RequestID)
+	// ip of user for req
+	router.Use(middleware.RealIP)
+
+	_ = router
 	// TODO: run server:
 }
 
