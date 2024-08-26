@@ -47,8 +47,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	_ = storage
-
 	// create router
 	router := chi.NewRouter()
 
