@@ -71,7 +71,7 @@ func (s *Storage) SaveURL(urlToSave string, alias string) (int64, error) {
 	return id, nil
 }
 
-func (s *Storage) GetUrl(urlToGet string) (string, error) {
+func (s *Storage) GetURL(urlToGet string) (string, error) {
 	const op = "storage.sqlite.GetUrl"
 
 	// select statement
