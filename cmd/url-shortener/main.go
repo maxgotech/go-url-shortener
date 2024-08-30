@@ -41,6 +41,12 @@ func main() {
 
 	log.Debug("debug messages enabled")
 
+	err := os.MkdirAll("./storage", os.ModePerm)
+	if err != nil {
+		log.Error("failed to create folder for storage", sl.Err(err))
+		os.Exit(1)
+	}
+
 	// create storage
 	storage, err := sqlite.NewStorage(cfg.StoragePath, log)
 	if err != nil {

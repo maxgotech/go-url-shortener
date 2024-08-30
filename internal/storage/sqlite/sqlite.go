@@ -93,7 +93,7 @@ func (s *Storage) GetURL(urlToGet string) (string, error) {
 	}
 }
 
-func (s *Storage) DeleteUrl(urlToDelete string) (bool, error) {
+func (s *Storage) DeleteURL(urlToDelete string) (bool, error) {
 	const op = "storage.sqlite.DeleteUrl"
 
 	_stmt := `DELETE FROM urls WHERE alias = ?`
