@@ -19,7 +19,7 @@ func NewStorage(storagePath string, log *slog.Logger) (*Storage, error) {
 
 	db, err := sql.Open("sqlite3", storagePath)
 	if err != nil {
-		log.Error("Unable to")
+		log.Error("Unable to connect to storage")
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
@@ -93,7 +93,7 @@ func (s *Storage) GetURL(urlToGet string) (string, error) {
 	}
 }
 
-func (s *Storage) DeleteURL(urlToDelete string) (bool, error) {
+func (s *Storage) DeleteURL(aliasToDelete string) (bool, error) {
 	const op = "storage.sqlite.DeleteUrl"
 
 	_stmt := `DELETE FROM urls WHERE alias = ?`
@@ -103,7 +103,7 @@ func (s *Storage) DeleteURL(urlToDelete string) (bool, error) {
 		return false, fmt.Errorf("%s: failed to prepare statement: %w", op, err)
 	}
 
-	res, err := stmt.Exec(urlToDelete)
+	res, err := stmt.Exec(aliasToDelete)
 	if err != nil {
 		return false, fmt.Errorf("%s: failed to exec statement: %w", op, err)
 	}
