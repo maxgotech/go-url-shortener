@@ -36,6 +36,7 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 		if alias == "" {
 			log.Info("alias is empty")
 
+			render.Status(r, http.StatusBadRequest)
 			render.JSON(w, r, resp.Error("invalid request"))
 
 			return
@@ -47,6 +48,7 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 		if errors.Is(err, storage.ErrURLNotFound) {
 			log.Info("URL with that Alias doesnt exist", slog.String("Alias", alias))
 
+			render.Status(r, http.StatusNotFound)
 			render.JSON(w, r, resp.Error("Alias doesnt exist"))
 
 			return
@@ -55,6 +57,7 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 		if err != nil {
 			log.Error("failed to delete Alias", sl.Err(err))
 
+			render.Status(r, http.StatusInternalServerError)
 			render.JSON(w, r, resp.Error("failed to delete Alias"))
 
 			return
@@ -62,6 +65,7 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 
 		log.Info("Alias deleted", slog.String("Alias", alias))
 
+		render.Status(r, http.StatusOK)
 		responseOK(w, r, alias)
 	}
 }
