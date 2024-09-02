@@ -18,7 +18,7 @@ type Response struct {
 	Alias string `json:"alias,omitempty"`
 }
 
-//go:generate go run github.com/vektra/mockery/v2@v2.28.2 --name=URLDeleter
+//go:generate mockery --name=URLDeleter
 type URLDeleter interface {
 	DeleteURL(urlToDelete string) (bool, error)
 }
@@ -33,6 +33,11 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 		)
 
 		alias := chi.URLParam(r, "alias")
+
+		// should never shoot(atleast with chi) since
+		// if path is empty router throws 404 page not found
+		// without calling the func
+		// but just in case this will stay
 		if alias == "" {
 			log.Info("alias is empty")
 

@@ -28,6 +28,11 @@ func New(log *slog.Logger, urlGetter URLGetter) http.HandlerFunc {
 		)
 
 		alias := chi.URLParam(r, "alias")
+
+		// should never shoot(atleast with chi) since
+		// if path is empty router throws 404 page not found
+		// without calling the func
+		// but just in case this will stay
 		if alias == "" {
 			log.Info("alias is empty")
 
