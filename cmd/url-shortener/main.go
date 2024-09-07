@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"url-shortener/internal/config"
+	"url-shortener/internal/http-server/handlers/health"
 	"url-shortener/internal/http-server/handlers/redirect"
 	"url-shortener/internal/http-server/handlers/url/delete"
 	"url-shortener/internal/http-server/handlers/url/save"
@@ -83,8 +84,10 @@ func main() {
 		r.Delete("/{alias}", delete.New(log, storage))
 	})
 
+	router.Get("/health", health.New(log, storage))
+
 	router.Get("/{alias}", redirect.New(log, storage))
-	
+
 	log.Info("starting server", slog.String("address", cfg.HTTPServer.Address))
 
 	srv := &http.Server{

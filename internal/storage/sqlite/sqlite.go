@@ -119,3 +119,20 @@ func (s *Storage) DeleteURL(aliasToDelete string) (bool, error) {
 		return false, storage.ErrURLNotFound
 	}
 }
+
+func (s *Storage) Health() (bool, error) {
+	const op = "storage.sqlite.Health"
+
+	stmt := `SELECT 1`
+
+	row := s.db.QueryRow(stmt)
+
+	var val int
+
+	err := row.Scan(&val)
+	if err != nil {
+		return false, fmt.Errorf("%s: health check failed: %w", op, err)
+	}
+
+	return true, nil
+}

@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/go-chi/chi/v5"
-	// "github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"url-shortener/internal/http-server/handlers/redirect"
