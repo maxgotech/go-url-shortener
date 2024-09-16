@@ -1,0 +1,12 @@
+kafka:
+  clusters:
+    - name: url-shortener
+      bootstrapServers: kafka:29092
+      schemaRegistry: http://localhost:8085
+      schemaRegistryAuth:
+        username: Maxim # currently not used
+        password: secret # currently not used
+      #     schemaNameTemplate: "%s-value"
+      metrics:
+        port: 9997
+        type: JMX

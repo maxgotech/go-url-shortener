@@ -2,7 +2,7 @@ package producer
 
 import (
 	"github.com/segmentio/kafka-go"
-	"github.com/segmentio/kafka-go/sasl/plain"
+	_"github.com/segmentio/kafka-go/sasl/plain"
 )
 
 type KafkaConfig struct {
@@ -12,21 +12,21 @@ type KafkaConfig struct {
 }
 
 func Producer(config KafkaConfig, topic string) *kafka.Writer {
-	mechanism := plain.Mechanism{
-		Username: config.Username,
-		Password: config.Password,
-	}
+	// mechanism := plain.Mechanism{
+	// 	Username: config.Username,
+	// 	Password: config.Password,
+	// }
 
-	sharedTransport := &kafka.Transport{
-		SASL: mechanism,
-	}
+	// sharedTransport := &kafka.Transport{
+	// 	SASL: mechanism,
+	// }
 
 
 	w := &kafka.Writer{
 		Addr:      kafka.TCP(config.Bootstrap),
 		Topic:     topic,
 		Balancer:  &kafka.LeastBytes{},
-		Transport: sharedTransport,
+		// Transport: sharedTransport,
 		RequiredAcks: kafka.RequireAll,
 	}
 

@@ -108,6 +108,7 @@ func New(log *slog.Logger, prod KafkaProducer, urlSaver URLSaver, alias_length i
 		if err != nil {
 			log.Warn("failed to log to kafka", sl.Err(err))
 		}
+		log.Info("Kafka log send")
 
 		render.Status(r, http.StatusCreated)
 		responseOK(w, r, alias)
