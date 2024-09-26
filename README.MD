@@ -9,6 +9,7 @@
 - mockery
 - chi
 - slog
+- Kafka
 
 ## Документация:
 
@@ -69,10 +70,12 @@ API: http://127.0.0.1:8082/ или http://localhost:8082/
     │   ├── http-server         # Функционал
     │   │   ├── handlers        # Обработчики
     │   │   ├── middleware      # Промежутчное ПО
+    │   ├── kafka               # Кафка
     │   ├── lib                 # Помощники
     │   │   ├── api             # Помощники API
     │   │   ├── logger          # Расширения для логгера
     │   │   ├── random          # Генерация рандомной строки
     │   └── storage             # Работа с БД
     ├── storage                 # БД sqlite
+    ├── kui                     # Kafka-UI конфиг
     └── ...
