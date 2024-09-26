@@ -7,3 +7,7 @@ http_server:
   alias_length: 5
   user: "myuser"
   password: "secret"
+kafka:
+  username: "Maxim"   # currently not used
+  password: "secret"  # currently not used
+  bootstrap_server: "localhost:9092"

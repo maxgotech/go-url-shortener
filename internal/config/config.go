@@ -12,6 +12,7 @@ type Config struct {
 	Env         string     `yaml:"env" env-default:"local" env-required:"true"`
 	StoragePath string     `yaml:"storage_path" env-required:"true"`
 	HTTPServer  HTTPServer `yaml:"http_server"`
+	Kafka       Kafka      `yaml:"kafka"`
 }
 
 type HTTPServer struct {
@@ -21,6 +22,12 @@ type HTTPServer struct {
 	User        string        `yaml:"user" env-required:"true"`
 	AliasLength int           `yaml:"alias_length" env-default:"5" env-required:"true"`
 	Password    string        `yaml:"password" env-required:"true" env:"HTTP_SERVER_PASSWORD"`
+}
+
+type Kafka struct {
+	Username        string `yaml:"username"  env-required:"true"`
+	Password        string `yaml:"password"  env-required:"true"`
+	BootstrapServer string `yaml:"bootstrap_server"  env-required:"true"`
 }
 
 func MustLoad() *Config {

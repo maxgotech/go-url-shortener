@@ -11,6 +11,7 @@ import (
 	"url-shortener/internal/http-server/handlers/url/delete"
 	"url-shortener/internal/http-server/handlers/url/save"
 	"url-shortener/internal/http-server/middleware/logger"
+	"url-shortener/internal/kafka/producer"
 	"url-shortener/internal/lib/logger/handlers/slogpretty"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
@@ -56,6 +57,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	kafkaProducer := producer.Producer(producer.KafkaConfig{
+		Username:  cfg.Kafka.Username,
+		Password:  cfg.Kafka.Password,
+		Bootstrap: cfg.Kafka.BootstrapServer,
+	},
+		"urls",
+	)
+	defer kafkaProducer.Close()
+
 	// create router
 	router := chi.NewRouter()
 
@@ -79,7 +89,7 @@ func main() {
 			cfg.HTTPServer.User: cfg.HTTPServer.Password,
 		}))
 
-		r.Post("/", save.New(log, storage, cfg.HTTPServer.AliasLength))
+		r.Post("/", save.New(log, kafkaProducer, storage, cfg.HTTPServer.AliasLength))
 
 		r.Delete("/{alias}", delete.New(log, storage))
 	})

@@ -10,6 +10,7 @@ import (
 	"testing"
 	"url-shortener/internal/http-server/handlers/url/save"
 	"url-shortener/internal/http-server/handlers/url/save/mocks"
+	"url-shortener/internal/kafka/producerdiscard"
 	"url-shortener/internal/lib/logger/handlers/slogdiscard"
 	"url-shortener/internal/storage"
 
@@ -86,7 +87,7 @@ func TestSaveHandler(t *testing.T) {
 			}
 
 			// _, _, 5 is alias_length
-			handler := save.New(slogdiscard.NewDiscardLogger(), urlSaverMock, 5)
+			handler := save.New(slogdiscard.NewDiscardLogger(), producerdiscard.NewDiscardProducer(), urlSaverMock, 5)
 
 			input := fmt.Sprintf(`{"url": "%s", "alias": "%s"}`, tc.url, tc.alias)
 

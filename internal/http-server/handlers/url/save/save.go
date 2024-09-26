@@ -1,8 +1,11 @@
 package save
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 	resp "url-shortener/internal/lib/api/response"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/lib/random"
@@ -13,6 +16,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
+	"github.com/segmentio/kafka-go"
 )
 
 type Request struct {
@@ -30,7 +34,11 @@ type URLSaver interface {
 	SaveURL(urlToSave string, alias string) (int64, error)
 }
 
-func New(log *slog.Logger, urlSaver URLSaver, alias_length int) http.HandlerFunc {
+type KafkaProducer interface {
+	WriteMessages(ctx context.Context, msgs ...kafka.Message) error
+}
+
+func New(log *slog.Logger, prod KafkaProducer, urlSaver URLSaver, alias_length int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.url.save.New"
 
@@ -90,6 +98,18 @@ func New(log *slog.Logger, urlSaver URLSaver, alias_length int) http.HandlerFunc
 		}
 
 		log.Info("URL added", slog.Int64("id", id))
+
+		msg := kafka.Message{
+			Key:   []byte(strconv.Itoa(int(id))),
+			Value: []byte(fmt.Sprintf("%v with alias %v", req.URL, req.Alias)),
+		}
+
+		err = prod.WriteMessages(context.Background(), msg)
+		if err != nil {
+			log.Warn("failed to log to kafka", sl.Err(err))
+		} else {
+			log.Info("Kafka log send")
+		}
 
 		render.Status(r, http.StatusCreated)
 		responseOK(w, r, alias)
