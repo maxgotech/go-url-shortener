@@ -3,7 +3,7 @@ package random
 import "testing"
 
 
-// Runs random strung generatir function twice
+// Runs random string generator function twice
 // and check for different results.
 func TestRandStr(t *testing.T){
 	size := 5
